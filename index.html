@@ -4,11 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dreamy Sleep</title>
+    <meta name="description" content="Sleep sound app with relaxing audio to help you fall asleep">
+    <meta name="theme-color" content="#2c003e">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            max-width: 100%;
+        }
+        
+        html {
+            overflow-x: hidden;
         }
         
         body {
@@ -17,11 +26,13 @@
             color: #fff;
             min-height: 100vh;
             padding: 20px;
+            overflow-x: hidden;
         }
         
         .container {
-            max-width: 600px;
+            max-width: 900px;
             margin: 0 auto;
+            overflow-x: hidden;
         }
         
         header {
@@ -44,21 +55,11 @@
             margin-bottom: 20px;
         }
         
-        .sound-categories {
-            margin-bottom: 30px;
-        }
-        
-        h2 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
-            font-weight: 300;
-            color: #b3ffeb;
-        }
-        
         .sound-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 15px;
+            margin-bottom: 30px;
         }
         
         .sound-card {
@@ -142,12 +143,25 @@
         }
         
         select {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(194, 255, 224, 0.2);
             color: #fff;
             border: none;
             padding: 8px 15px;
             border-radius: 20px;
             outline: none;
+            font-size: 16px;
+        }
+        
+        select option {
+            background-color: #2c003e;
+            color: #fff;
+            font-size: 16px;
+        }
+        
+        @media (max-width: 768px) {
+            .sound-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
         
         @media (max-width: 480px) {
@@ -157,10 +171,6 @@
             
             h1 {
                 font-size: 2rem;
-            }
-            
-            h2 {
-                font-size: 1.5rem;
             }
         }
     </style>
@@ -173,8 +183,12 @@
         </header>
         
         <main>
-            <section class="sound-categories">
-                <h2>Nature Sounds</h2>
+            <section>
+                <!-- 
+                    SOUND BUTTONS SECTION
+                    To edit sound buttons, look for the soundNames and soundDescriptions
+                    variables in the script section below.
+                -->
                 <div class="sound-grid">
                     <div class="sound-card" data-sound="rain">
                         <h3>Gentle Rain</h3>
@@ -192,12 +206,6 @@
                         <h3>Babbling Brook</h3>
                         <p>Water flowing over smooth stones</p>
                     </div>
-                </div>
-            </section>
-            
-            <section class="sound-categories">
-                <h2>Ambient Sounds</h2>
-                <div class="sound-grid">
                     <div class="sound-card" data-sound="white-noise">
                         <h3>White Noise</h3>
                         <p>Gentle static to mask disturbances</p>
@@ -214,12 +222,6 @@
                         <h3>Night Train</h3>
                         <p>Distant train sounds and rail rhythms</p>
                     </div>
-                </div>
-            </section>
-            
-            <section class="sound-categories">
-                <h2>Music & Melodies</h2>
-                <div class="sound-grid">
                     <div class="sound-card" data-sound="piano">
                         <h3>Gentle Piano</h3>
                         <p>Soft piano melodies in the night</p>
@@ -246,7 +248,7 @@
                     <button id="pause-btn">Pause</button>
                 </div>
                 <div class="timer-container">
-                    <label for="timer">Sleep Timer: </label>
+                    <label for="timer" style="font-size: 16px; color: #c2ffe0;">Sleep Timer: </label>
                     <select id="timer">
                         <option value="0">Continuous</option>
                         <option value="30">30 minutes</option>
@@ -260,6 +262,62 @@
     </div>
 
     <script>
+        // ====================================================================
+        // EDITABLE SECTION - CHANGE SOUND NAMES AND DESCRIPTIONS HERE
+        // ====================================================================
+        
+        // To change a button name, find its ID and change the text in soundNames
+        const soundNames = {
+            'rain': 'Gentle Rain',
+            'forest': 'Forest Night',
+            'waves': 'Ocean Waves',
+            'creek': 'Babbling Brook',
+            'white-noise': 'White Noise',
+            'fan': 'Ceiling Fan',
+            'fireplace': 'Crackling Fire',
+            'train': 'Night Train',
+            'piano': 'Gentle Piano',
+            'meditation': 'Meditation Bowls',
+            'lullaby': 'Lullaby',
+            'space': 'Space Ambience'
+        };
+        
+        // To change a description, find its ID and change the text in soundDescriptions
+        const soundDescriptions = {
+            'rain': 'Soft rainfall on a quiet night',
+            'forest': 'Crickets and distant owl hoots',
+            'waves': 'Waves gently breaking on the shore',
+            'creek': 'Water flowing over smooth stones',
+            'white-noise': 'Gentle static to mask disturbances',
+            'fan': 'Rhythmic whirring of fan blades',
+            'fireplace': 'Warm fire burning in a hearth',
+            'train': 'Distant train sounds and rail rhythms',
+            'piano': 'Soft piano melodies in the night',
+            'meditation': 'Resonant singing bowls and chimes',
+            'lullaby': 'Soothing melodies for peaceful sleep',
+            'space': 'Ethereal cosmic soundscapes'
+        };
+        
+        // Sound sources - update these paths to point to your GitHub hosted files
+        const soundSources = {
+            'rain': './sounds/rain.mp3',
+            'forest': './sounds/forest.mp3',
+            'waves': './sounds/waves.mp3',
+            'creek': './sounds/creek.mp3',
+            'white-noise': './sounds/white-noise.mp3',
+            'fan': './sounds/fan.mp3',
+            'fireplace': './sounds/fire.mp3',
+            'train': './sounds/train.mp3',
+            'piano': './sounds/piano.mp3',
+            'meditation': './sounds/meditation.mp3',
+            'lullaby': './sounds/lullaby.mp3',
+            'space': './sounds/space.mp3'
+        };
+        
+        // ====================================================================
+        // END OF EDITABLE SECTION
+        // ====================================================================
+        
         // Audio functionality
         const soundCards = document.querySelectorAll('.sound-card');
         const player = document.querySelector('.player');
@@ -272,22 +330,6 @@
         let audioElement = null;
         let currentSoundId = null;
         let timerTimeout = null;
-        
-        // Sound sources - using free sounds from Pixabay and other free sound libraries
-        const soundSources = {
-            'rain': 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_db4319038b.mp3',
-            'forest': 'https://cdn.pixabay.com/download/audio/2021/10/25/audio_49d9a91270.mp3',
-            'waves': 'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d05b811ae1.mp3',
-            'creek': 'https://cdn.pixabay.com/download/audio/2021/08/09/audio_88447e769a.mp3',
-            'white-noise': 'https://cdn.pixabay.com/download/audio/2022/01/27/audio_d1f8848b21.mp3',
-            'fan': 'https://cdn.pixabay.com/download/audio/2021/08/09/audio_d1a75a92af.mp3',
-            'fireplace': 'https://cdn.pixabay.com/download/audio/2021/08/09/audio_d154e29839.mp3',
-            'train': 'https://cdn.pixabay.com/download/audio/2022/03/10/audio_5d03c25e42.mp3',
-            'piano': 'https://cdn.pixabay.com/download/audio/2022/01/20/audio_1fefefb16d.mp3',
-            'meditation': 'https://cdn.pixabay.com/download/audio/2022/03/09/audio_270f49b1bf.mp3',
-            'lullaby': 'https://cdn.pixabay.com/download/audio/2022/01/11/audio_6c708516c8.mp3',
-            'space': 'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73471.mp3'
-        };
         
         // Function to play a sound
         function playSound(soundId) {
@@ -312,14 +354,14 @@
                 // Play the audio
                 audioElement.play().catch(error => {
                     console.error('Audio playback error:', error);
-                    alert('Unable to play audio. Please try again or try another sound.');
+                    alert('Unable to play audio. Make sure the sound file exists at ' + soundSources[soundId]);
                 });
                 
                 // Set timer if selected
                 setTimer();
             } else {
                 console.error(`Sound source not found for: ${soundId}`);
-                alert('Sound not available. Please try another.');
+                alert('Sound not available. Please check the path: ' + soundSources[soundId]);
             }
         }
         
@@ -348,8 +390,18 @@
             }
         }
         
-        // Event listeners
+        // Event Listeners for sound cards
         soundCards.forEach(card => {
+            // Update card text from our editable variables
+            const soundId = card.dataset.sound;
+            if (soundNames[soundId]) {
+                card.querySelector('h3').textContent = soundNames[soundId];
+            }
+            if (soundDescriptions[soundId]) {
+                card.querySelector('p').textContent = soundDescriptions[soundId];
+            }
+            
+            // Add click handler
             card.addEventListener('click', () => {
                 const soundId = card.dataset.sound;
                 const soundName = card.querySelector('h3').textContent;
@@ -367,6 +419,7 @@
             });
         });
         
+        // Event listeners for player controls
         playBtn.addEventListener('click', () => {
             if (audioElement && currentSoundId) {
                 audioElement.play();
@@ -382,6 +435,29 @@
         });
         
         timerSelect.addEventListener('change', setTimer);
+        
+        // Show an initial sound card as selected
+        setTimeout(() => {
+            if (soundCards.length > 0) {
+                soundCards[0].click();
+            }
+        }, 1000);
+    </script>
+    
+    <!-- PWA installation script -->
+    <script>
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed: ', error);
+                    });
+            });
+        }
     </script>
 </body>
 </html>
