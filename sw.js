@@ -20,8 +20,8 @@ const filesToCache = [
   './sounds/meditation.mp3',
   './sounds/lullaby.mp3',
   './sounds/space.mp3',
-  './icons/icon-192x192.png',
-  './icons/icon-512x512.png'
+  './icon-192x192.png',
+  './icon-512x512.png'
 ];
 
 // Install the service worker
