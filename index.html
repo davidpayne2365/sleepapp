@@ -103,6 +103,27 @@
             color: rgba(255, 255, 255, 0.7);
         }
         
+        .edit-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #fff;
+            cursor: pointer;
+            z-index: 10;
+        }
+        
+        .edit-icon:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        
         .player {
             background: rgba(0, 0, 0, 0.3);
             padding: 20px;
@@ -158,6 +179,128 @@
             font-size: 16px;
         }
         
+        /* Recording interface styles */
+        .record-interface {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 30px;
+            display: none;
+            text-align: center;
+        }
+        
+        .record-interface.active {
+            display: block;
+        }
+        
+        .record-btn {
+            background: rgba(255, 100, 100, 0.3);
+            border: none;
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            font-size: 16px;
+        }
+        
+        .record-btn:hover {
+            background: rgba(255, 100, 100, 0.5);
+        }
+        
+        .record-btn.recording {
+            animation: pulse 1.5s infinite;
+            background: rgba(255, 100, 100, 0.7);
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .record-timer {
+            font-size: 2rem;
+            margin: 15px 0;
+            font-family: monospace;
+            color: #c2ffe0;
+        }
+        
+        .recording-controls button {
+            margin: 0 5px;
+        }
+        
+        /* Modal styles for editing */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #3d1157, #2d3b5b);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+        }
+        
+        .modal h3 {
+            margin-bottom: 20px;
+            color: #c2ffe0;
+            font-size: 1.5rem;
+            font-weight: 300;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #a090d0;
+        }
+        
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 16px;
+        }
+        
+        .input-group textarea {
+            resize: vertical;
+            height: 80px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
         @media (max-width: 768px) {
             .sound-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -186,55 +329,66 @@
             <section>
                 <!-- 
                     SOUND BUTTONS SECTION
-                    To edit sound buttons, look for the soundNames and soundDescriptions
-                    variables in the script section below.
+                    Now with edit icons and ability to record custom sounds
                 -->
                 <div class="sound-grid">
                     <div class="sound-card" data-sound="rain">
+                        <div class="edit-icon" title="Edit">✏️</div>
                         <h3>Gentle Rain</h3>
                         <p>Soft rainfall on a quiet night</p>
                     </div>
                     <div class="sound-card" data-sound="forest">
+                        <div class="edit-icon" title="Edit">✏️</div>
                         <h3>Forest Night</h3>
                         <p>Crickets and distant owl hoots</p>
                     </div>
                     <div class="sound-card" data-sound="waves">
+                        <div class="edit-icon" title="Edit">✏️</div>
                         <h3>Ocean Waves</h3>
                         <p>Waves gently breaking on the shore</p>
                     </div>
                     <div class="sound-card" data-sound="creek">
+                        <div class="edit-icon" title="Edit">✏️</div>
                         <h3>Babbling Brook</h3>
                         <p>Water flowing over smooth stones</p>
                     </div>
                     <div class="sound-card" data-sound="white-noise">
+                        <div class="edit-icon" title="Edit">✏️</div>
                         <h3>White Noise</h3>
                         <p>Gentle static to mask disturbances</p>
                     </div>
                     <div class="sound-card" data-sound="fan">
+                        <div class="edit-icon" title="Edit">✏️</div>
                         <h3>Ceiling Fan</h3>
                         <p>Rhythmic whirring of fan blades</p>
                     </div>
                     <div class="sound-card" data-sound="fireplace">
+                        <div class="edit-icon" title="Edit">✏️</div>
                         <h3>Crackling Fire</h3>
                         <p>Warm fire burning in a hearth</p>
                     </div>
                     <div class="sound-card" data-sound="train">
+                        <div class="edit-icon" title="Edit">✏️</div>
                         <h3>Night Train</h3>
                         <p>Distant train sounds and rail rhythms</p>
                     </div>
                     <div class="sound-card" data-sound="piano">
+                        <div class="edit-icon" title="Edit">✏️</div>
                         <h3>Gentle Piano</h3>
                         <p>Soft piano melodies in the night</p>
                     </div>
                     <div class="sound-card" data-sound="meditation">
+                        <div class="edit-icon" title="Edit">✏️</div>
                         <h3>Meditation Bowls</h3>
                         <p>Resonant singing bowls and chimes</p>
                     </div>
                     <div class="sound-card" data-sound="lullaby">
+                        <div class="edit-icon" title="Edit">✏️</div>
                         <h3>Lullaby</h3>
                         <p>Soothing melodies for peaceful sleep</p>
                     </div>
                     <div class="sound-card" data-sound="space">
+                        <div class="edit-icon" title="Edit">✏️</div>
                         <h3>Space Ambience</h3>
                         <p>Ethereal cosmic soundscapes</p>
                     </div>
@@ -246,6 +400,7 @@
                 <div class="player-controls">
                     <button id="play-btn">Play</button>
                     <button id="pause-btn">Pause</button>
+                    <button id="record-toggle-btn">Record New</button>
                 </div>
                 <div class="timer-container">
                     <label for="timer" style="font-size: 16px; color: #c2ffe0;">Sleep Timer: </label>
@@ -258,7 +413,38 @@
                     </select>
                 </div>
             </div>
+            
+            <!-- New recording interface -->
+            <div class="record-interface">
+                <h3>Record Your Own Sound</h3>
+                <p>Record a custom sound to replace the current selection</p>
+                <div class="record-timer">00:00</div>
+                <div class="recording-controls">
+                    <button id="start-recording" class="record-btn">Start Recording</button>
+                    <button id="stop-recording" disabled>Stop & Save</button>
+                    <button id="cancel-recording">Cancel</button>
+                </div>
+            </div>
         </main>
+    </div>
+    
+    <!-- Edit Modal -->
+    <div class="modal" id="edit-modal">
+        <div class="modal-content">
+            <h3>Edit Sound</h3>
+            <div class="input-group">
+                <label for="sound-name">Sound Name:</label>
+                <input type="text" id="sound-name" placeholder="Enter a new name">
+            </div>
+            <div class="input-group">
+                <label for="sound-description">Description:</label>
+                <textarea id="sound-description" placeholder="Enter a new description"></textarea>
+            </div>
+            <div class="modal-buttons">
+                <button id="cancel-edit">Cancel</button>
+                <button id="save-edit">Save Changes</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -266,8 +452,8 @@
         // EDITABLE SECTION - CHANGE SOUND NAMES AND DESCRIPTIONS HERE
         // ====================================================================
         
-        // To change a button name, find its ID and change the text in soundNames
-        const soundNames = {
+        // Default sound names and descriptions
+        const defaultSoundNames = {
             'rain': 'Gentle Rain',
             'forest': 'Forest Night',
             'waves': 'Ocean Waves',
@@ -282,8 +468,7 @@
             'space': 'Space Ambience'
         };
         
-        // To change a description, find its ID and change the text in soundDescriptions
-        const soundDescriptions = {
+        const defaultSoundDescriptions = {
             'rain': 'Soft rainfall on a quiet night',
             'forest': 'Crickets and distant owl hoots',
             'waves': 'Waves gently breaking on the shore',
@@ -300,7 +485,7 @@
         
         // Sound sources - update these paths to point to your GitHub hosted files
         const soundSources = {
-            'rain': 'soundstrain.mp3',
+            'rain': './sounds/rain.mp3', // Fixed path to rain sound file
             'forest': './sounds/forest.mp3',
             'waves': './sounds/waves.mp3',
             'creek': './sounds/creek.mp3',
@@ -314,6 +499,65 @@
             'space': './sounds/space.mp3'
         };
         
+        // Load saved data from localStorage or use defaults
+        let soundNames = { ...defaultSoundNames };
+        let soundDescriptions = { ...defaultSoundDescriptions };
+        
+        // Try to load saved names and descriptions
+        try {
+            const savedNames = localStorage.getItem('dreamySleepNames');
+            const savedDescriptions = localStorage.getItem('dreamySleepDescriptions');
+            
+            if (savedNames) {
+                soundNames = { ...defaultSoundNames, ...JSON.parse(savedNames) };
+            }
+            
+            if (savedDescriptions) {
+                soundDescriptions = { ...defaultSoundDescriptions, ...JSON.parse(savedDescriptions) };
+            }
+        } catch (error) {
+            console.error('Error loading saved data:', error);
+        }
+        
+        // User recorded sounds will be stored here
+        const userRecordings = {};
+        
+        // Load any saved recordings from localStorage
+        const loadSavedRecordings = () => {
+            try {
+                const savedRecordingsList = localStorage.getItem('dreamySleepRecordings');
+                if (savedRecordingsList) {
+                    const recordingIds = JSON.parse(savedRecordingsList);
+                    
+                    // For each saved recording ID, load the audio data
+                    recordingIds.forEach(id => {
+                        const audioData = localStorage.getItem(`dreamySleepRecording_${id}`);
+                        if (audioData) {
+                            // Convert base64 string back to blob
+                            const binaryData = atob(audioData);
+                            const arrayBuffer = new ArrayBuffer(binaryData.length);
+                            const uint8Array = new Uint8Array(arrayBuffer);
+                            
+                            for (let i = 0; i < binaryData.length; i++) {
+                                uint8Array[i] = binaryData.charCodeAt(i);
+                            }
+                            
+                            const blob = new Blob([uint8Array], { type: 'audio/webm' });
+                            userRecordings[id] = URL.createObjectURL(blob);
+                            
+                            // Update UI to show custom recording is available
+                            const card = document.querySelector(`.sound-card[data-sound="${id}"]`);
+                            if (card) {
+                                card.style.background = 'rgba(194, 255, 224, 0.15)';
+                            }
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading saved recordings:', error);
+            }
+        };
+        
         // ====================================================================
         // END OF EDITABLE SECTION
         // ====================================================================
@@ -325,11 +569,34 @@
         const playBtn = document.getElementById('play-btn');
         const pauseBtn = document.getElementById('pause-btn');
         const timerSelect = document.getElementById('timer');
+        const recordToggleBtn = document.getElementById('record-toggle-btn');
+        
+        // Recording interface elements
+        const recordInterface = document.querySelector('.record-interface');
+        const startRecordingBtn = document.getElementById('start-recording');
+        const stopRecordingBtn = document.getElementById('stop-recording');
+        const cancelRecordingBtn = document.getElementById('cancel-recording');
+        const recordTimer = document.querySelector('.record-timer');
+        
+        // Edit modal elements
+        const editModal = document.getElementById('edit-modal');
+        const soundNameInput = document.getElementById('sound-name');
+        const soundDescInput = document.getElementById('sound-description');
+        const saveEditBtn = document.getElementById('save-edit');
+        const cancelEditBtn = document.getElementById('cancel-edit');
+        const editIcons = document.querySelectorAll('.edit-icon');
         
         // Audio element for playing sounds
         let audioElement = null;
         let currentSoundId = null;
         let timerTimeout = null;
+        
+        // Recording variables
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let recordingInterval = null;
+        let recordingStartTime = null;
+        let currentEditingSoundId = null;
         
         // Function to play a sound
         function playSound(soundId) {
@@ -345,8 +612,23 @@
                 timerTimeout = null;
             }
             
-            // Create and play new audio element
-            if (soundSources[soundId]) {
+            // Check if there's a user recording first
+            if (userRecordings[soundId]) {
+                audioElement = new Audio(userRecordings[soundId]);
+                audioElement.loop = true;
+                currentSoundId = soundId;
+                
+                // Play the audio
+                audioElement.play().catch(error => {
+                    console.error('Audio playback error:', error);
+                    alert('Unable to play your recorded audio. You may need to record again.');
+                });
+                
+                // Set timer if selected
+                setTimer();
+            }
+            // If no user recording, play the default sound
+            else if (soundSources[soundId]) {
                 audioElement = new Audio(soundSources[soundId]);
                 audioElement.loop = true;
                 currentSoundId = soundId;
@@ -354,14 +636,15 @@
                 // Play the audio
                 audioElement.play().catch(error => {
                     console.error('Audio playback error:', error);
-                    alert('Unable to play audio. Make sure the sound file exists at ' + soundSources[soundId]);
+                    const soundName = soundNames[soundId] || soundId;
+                    alert(`Unable to play "${soundName}" audio. The sound file may be missing or in the wrong location. Consider recording your own version.`);
                 });
                 
                 // Set timer if selected
                 setTimer();
             } else {
                 console.error(`Sound source not found for: ${soundId}`);
-                alert('Sound not available. Please check the path: ' + soundSources[soundId]);
+                alert('Sound not available. Please check the path or record your own version.');
             }
         }
         
@@ -390,6 +673,134 @@
             }
         }
         
+        // Function to update the recording timer display
+        function updateRecordingTimer() {
+            if (!recordingStartTime) return;
+            
+            const elapsed = Date.now() - recordingStartTime;
+            const seconds = Math.floor((elapsed / 1000) % 60);
+            const minutes = Math.floor((elapsed / 1000 / 60) % 60);
+            
+            recordTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Function to start recording
+        function startRecording() {
+            if (!navigator.mediaDevices) {
+                alert('Audio recording is not supported in this browser.');
+                return;
+            }
+            
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    recordedChunks = [];
+                    
+                    mediaRecorder.ondataavailable = (e) => {
+                        if (e.data.size > 0) {
+                            recordedChunks.push(e.data);
+                        }
+                    };
+                    
+                    mediaRecorder.onstop = () => {
+                        // Create a blob from the recorded chunks
+                        const blob = new Blob(recordedChunks, { type: 'audio/webm' });
+                        
+                        // Store the recording in userRecordings object
+                        if (currentSoundId) {
+                            userRecordings[currentSoundId] = URL.createObjectURL(blob);
+                            
+                            // Update UI to show custom recording is available
+                            const card = document.querySelector(`.sound-card[data-sound="${currentSoundId}"]`);
+                            if (card) {
+                                card.style.background = 'rgba(194, 255, 224, 0.15)';
+                            }
+                            
+                            // Save recording to localStorage
+                            saveRecording(currentSoundId, blob);
+                        }
+                        
+                        // Clear recording interface
+                        clearInterval(recordingInterval);
+                        recordingStartTime = null;
+                        recordTimer.textContent = '00:00';
+                        
+                        // Close recording interface
+                        recordInterface.classList.remove('active');
+                        player.classList.add('active');
+                    };
+                    
+                    // Function to save recording to localStorage
+                    function saveRecording(soundId, blob) {
+                        try {
+                            // Get the current list of recording IDs
+                            let recordingIds = [];
+                            const savedList = localStorage.getItem('dreamySleepRecordings');
+                            
+                            if (savedList) {
+                                recordingIds = JSON.parse(savedList);
+                                
+                                // Add the current ID if it doesn't exist
+                                if (!recordingIds.includes(soundId)) {
+                                    recordingIds.push(soundId);
+                                }
+                            } else {
+                                recordingIds = [soundId];
+                            }
+                            
+                            // Save the updated list
+                            localStorage.setItem('dreamySleepRecordings', JSON.stringify(recordingIds));
+                            
+                            // Convert blob to base64 string for storage
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                                // Get base64 data (remove data URL prefix)
+                                const base64Data = reader.result.split(',')[1];
+                                
+                                // Store the audio data
+                                localStorage.setItem(`dreamySleepRecording_${soundId}`, base64Data);
+                                console.log(`Recording saved for ${soundId}`);
+                            };
+                            
+                            reader.readAsDataURL(blob);
+                        } catch (error) {
+                            console.error('Error saving recording:', error);
+                            alert('Unable to save your recording. Local storage may be full or unavailable.');
+                        }
+                    }
+                    
+                    // Start recording
+                    mediaRecorder.start();
+                    recordingStartTime = Date.now();
+                    
+                    // Start timer
+                    recordingInterval = setInterval(updateRecordingTimer, 1000);
+                    
+                    // Update UI
+                    startRecordingBtn.classList.add('recording');
+                    startRecordingBtn.textContent = 'Recording...';
+                    stopRecordingBtn.disabled = false;
+                    
+                    console.log('Recording started');
+                })
+                .catch(err => {
+                    console.error('Error accessing microphone:', err);
+                    alert('Unable to access microphone. Please check your browser permissions.');
+                });
+        }
+        
+        // Function to stop recording
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                
+                startRecordingBtn.classList.remove('recording');
+                startRecordingBtn.textContent = 'Start Recording';
+                stopRecordingBtn.disabled = true;
+            }
+        }
+        
         // Event Listeners for sound cards
         soundCards.forEach(card => {
             // Update card text from our editable variables
@@ -402,21 +813,95 @@
             }
             
             // Add click handler
-            card.addEventListener('click', () => {
+            card.addEventListener('click', (e) => {
+                // Don't trigger if clicking the edit icon
+                if (e.target.classList.contains('edit-icon') || e.target.closest('.edit-icon')) {
+                    return;
+                }
+                
                 const soundId = card.dataset.sound;
                 const soundName = card.querySelector('h3').textContent;
                 
                 // Update UI
                 currentSound.textContent = soundName;
                 player.classList.add('active');
+                recordInterface.classList.remove('active');
                 
                 // Highlight selected card
                 soundCards.forEach(c => c.style.border = 'none');
                 card.style.border = '2px solid rgba(194, 255, 224, 0.7)';
                 
                 // Play the sound
+                currentSoundId = soundId;
                 playSound(soundId);
             });
+        });
+        
+        // Event listeners for edit icons
+        editIcons.forEach(icon => {
+            icon.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent card click
+                
+                const card = icon.closest('.sound-card');
+                const soundId = card.dataset.sound;
+                currentEditingSoundId = soundId;
+                
+                // Populate modal with current values
+                soundNameInput.value = soundNames[soundId] || card.querySelector('h3').textContent;
+                soundDescInput.value = soundDescriptions[soundId] || card.querySelector('p').textContent;
+                
+                // Show modal
+                editModal.classList.add('active');
+            });
+        });
+        
+        // Function to save names and descriptions to localStorage
+        function saveTextToLocalStorage() {
+            try {
+                localStorage.setItem('dreamySleepNames', JSON.stringify(soundNames));
+                localStorage.setItem('dreamySleepDescriptions', JSON.stringify(soundDescriptions));
+                console.log('Sound names and descriptions saved to localStorage');
+            } catch (error) {
+                console.error('Error saving to localStorage:', error);
+            }
+        }
+        
+        // Event listeners for modal buttons
+        saveEditBtn.addEventListener('click', () => {
+            if (currentEditingSoundId) {
+                const newName = soundNameInput.value.trim();
+                const newDesc = soundDescInput.value.trim();
+                
+                if (newName && newDesc) {
+                    // Update data
+                    soundNames[currentEditingSoundId] = newName;
+                    soundDescriptions[currentEditingSoundId] = newDesc;
+                    
+                    // Update UI
+                    const card = document.querySelector(`.sound-card[data-sound="${currentEditingSoundId}"]`);
+                    if (card) {
+                        card.querySelector('h3').textContent = newName;
+                        card.querySelector('p').textContent = newDesc;
+                    }
+                    
+                    // Update current playing sound name if needed
+                    if (currentSoundId === currentEditingSoundId) {
+                        currentSound.textContent = newName;
+                    }
+                    
+                    // Save to localStorage
+                    saveTextToLocalStorage();
+                }
+                
+                // Close modal
+                editModal.classList.remove('active');
+                currentEditingSoundId = null;
+            }
+        });
+        
+        cancelEditBtn.addEventListener('click', () => {
+            editModal.classList.remove('active');
+            currentEditingSoundId = null;
         });
         
         // Event listeners for player controls
@@ -435,6 +920,42 @@
         });
         
         timerSelect.addEventListener('change', setTimer);
+        
+        // Recording interface control
+        recordToggleBtn.addEventListener('click', () => {
+            if (currentSoundId) {
+                player.classList.remove('active');
+                recordInterface.classList.add('active');
+            } else {
+                alert('Please select a sound to record over first.');
+            }
+        });
+        
+        startRecordingBtn.addEventListener('click', startRecording);
+        stopRecordingBtn.addEventListener('click', stopRecording);
+        
+        cancelRecordingBtn.addEventListener('click', () => {
+            // Stop any ongoing recording
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            }
+            
+            // Clear recording interface
+            clearInterval(recordingInterval);
+            recordingStartTime = null;
+            recordTimer.textContent = '00:00';
+            startRecordingBtn.classList.remove('recording');
+            startRecordingBtn.textContent = 'Start Recording';
+            stopRecordingBtn.disabled = true;
+            
+            // Show player interface
+            recordInterface.classList.remove('active');
+            player.classList.add('active');
+        });
+        
+        // Load saved recordings when the page loads
+        loadSavedRecordings();
         
         // Show an initial sound card as selected
         setTimeout(() => {
