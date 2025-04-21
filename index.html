@@ -847,8 +847,53 @@
             recordTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
         
-        // Function to start recording
+        // Function to save recording to localStorage
+        function saveRecording(soundId, blob) {
+            try {
+                // Get the current list of recording IDs
+                let recordingIds = [];
+                const savedList = localStorage.getItem('dreamySleepRecordings');
+                
+                if (savedList) {
+                    recordingIds = JSON.parse(savedList);
+                    
+                    // Add the current ID if it doesn't exist
+                    if (!recordingIds.includes(soundId)) {
+                        recordingIds.push(soundId);
+                    }
+                } else {
+                    recordingIds = [soundId];
+                }
+                
+                // Save the updated list
+                localStorage.setItem('dreamySleepRecordings', JSON.stringify(recordingIds));
+                
+                // Convert blob to base64 string for storage
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    // Get base64 data (remove data URL prefix)
+                    const base64Data = reader.result.split(',')[1];
+                    
+                    // Store the audio data
+                    localStorage.setItem(`dreamySleepRecording_${soundId}`, base64Data);
+                    console.log(`Recording saved for ${soundId}`);
+                };
+                
+                reader.readAsDataURL(blob);
+            } catch (error) {
+                console.error('Error saving recording:', error);
+                console.log('Unable to save your recording. Local storage may be full or unavailable.');
+            }
+        }
+        
+        // FIXED: Function to start recording with bug fixes
         function startRecording() {
+            // Stop any currently playing audio first
+            if (audioElement) {
+                audioElement.pause();
+                audioElement = null;
+            }
+            
             if (!navigator.mediaDevices) {
                 console.error('Audio recording is not supported in this browser.');
                 return;
@@ -868,6 +913,11 @@
                     mediaRecorder.onstop = () => {
                         // Create a blob from the recorded chunks
                         const blob = new Blob(recordedChunks, { type: 'audio/webm' });
+                        
+                        // If there's an existing recording URL, revoke it to prevent memory leaks
+                        if (userRecordings[currentSoundId]) {
+                            URL.revokeObjectURL(userRecordings[currentSoundId]);
+                        }
                         
                         // Store the recording in userRecordings object
                         if (currentSoundId) {
@@ -892,45 +942,6 @@
                         recordingSection.style.display = 'none';
                         playerSection.style.display = 'block';
                     };
-                    
-                    // Function to save recording to localStorage
-                    function saveRecording(soundId, blob) {
-                        try {
-                            // Get the current list of recording IDs
-                            let recordingIds = [];
-                            const savedList = localStorage.getItem('dreamySleepRecordings');
-                            
-                            if (savedList) {
-                                recordingIds = JSON.parse(savedList);
-                                
-                                // Add the current ID if it doesn't exist
-                                if (!recordingIds.includes(soundId)) {
-                                    recordingIds.push(soundId);
-                                }
-                            } else {
-                                recordingIds = [soundId];
-                            }
-                            
-                            // Save the updated list
-                            localStorage.setItem('dreamySleepRecordings', JSON.stringify(recordingIds));
-                            
-                            // Convert blob to base64 string for storage
-                            const reader = new FileReader();
-                            reader.onloadend = () => {
-                                // Get base64 data (remove data URL prefix)
-                                const base64Data = reader.result.split(',')[1];
-                                
-                                // Store the audio data
-                                localStorage.setItem(`dreamySleepRecording_${soundId}`, base64Data);
-                                console.log(`Recording saved for ${soundId}`);
-                            };
-                            
-                            reader.readAsDataURL(blob);
-                        } catch (error) {
-                            console.error('Error saving recording:', error);
-                            console.log('Unable to save your recording. Local storage may be full or unavailable.');
-                        }
-                    }
                     
                     // Start recording
                     mediaRecorder.start();
@@ -1113,12 +1124,24 @@
         
         timerSelect.addEventListener('change', setTimer);
         
-        // Recording interface control
+        // FIXED: Recording interface control with improved behavior
         recordToggleBtn.addEventListener('click', () => {
+            // Stop any currently playing audio first
+            if (audioElement) {
+                audioElement.pause();
+                audioElement = null;
+            }
+            
             if (currentSoundId) {
                 // Hide player controls, show recording interface
                 playerSection.style.display = 'none';
                 recordingSection.style.display = 'block';
+                
+                // Reset recording UI
+                startRecordingBtn.classList.remove('recording');
+                startRecordingBtn.textContent = 'Start Recording';
+                stopRecordingBtn.disabled = true;
+                recordTimer.textContent = '00:00';
             } else {
                 console.log('Please select a sound to record over first.');
             }
@@ -1150,10 +1173,17 @@
         // Load saved recordings when the page loads
         loadSavedRecordings();
         
-        // Show an initial sound card as selected
+        // Show an initial sound card as selected - FIXED: remove auto-play on page load
         setTimeout(() => {
             if (soundCards.length > 0) {
-                soundCards[0].click();
+                const firstCard = soundCards[0];
+                const soundId = firstCard.dataset.sound;
+                const soundName = firstCard.querySelector('h3').textContent;
+                
+                // Just highlight the card without playing it
+                firstCard.style.border = '2px solid rgba(194, 255, 224, 0.7)';
+                currentSoundId = soundId;
+                currentSound.textContent = soundName;
             }
         }, 1000);
     </script>
